@@ -11,7 +11,10 @@
     <!-- Fuente -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #f3f4f6; 
+        }
         #content-frame { height: calc(100vh - 120px); }
     </style>
 
@@ -51,12 +54,15 @@
     <!-- CONTENIDO -->
     <main class="flex-grow p-4 md:p-6">
         <div class="max-w-full mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+
+            <!-- MAPA / MONITOREO -->
             <iframe id="content-frame"
-                    src="https://monitoreo.gpseyes.pe/sharing/f26738032cc992ea790a7a6d80f5b066"
-                    class="w-full"
-                    frameborder="0"
-                    allowfullscreen>
+                src="https://monitoreo.gpseyes.pe/sharing/f26738032cc992ea790a7a6d80f5b066"
+                class="w-full h-[80vh]"
+                frameborder="0"
+                allowfullscreen>
             </iframe>
+
         </div>
     </main>
 
@@ -164,13 +170,13 @@
         <!-- FORMULARIO -->
         <div id="chat-form">
             <label>Nombre:</label>
-            <input type="text" id="nombre">
+            <input type="text" id="chat-nombre">
 
             <label>Dirección:</label>
-            <input type="text" id="direccion">
+            <input type="text" id="chat-direccion">
 
             <label>Detalle del problema:</label>
-            <textarea id="incidencia" rows="3"></textarea>
+            <textarea id="chat-incidencia" rows="3"></textarea>
 
             <button onclick="enviarReporte()">Enviar reporte</button>
         </div>
@@ -198,9 +204,9 @@
         addMessage("Estimado vecino, contribuye a mantener una ciudad limpia.<br>Complete los datos y envíe su reporte.");
 
         function enviarReporte() {
-            const name = document.getElementById("nombre").value.trim();
-            const direccion = document.getElementById("direccion").value.trim();
-            const incidencia = document.getElementById("incidencia").value.trim();
+            const name = document.getElementById("chat-nombre").value.trim();
+            const direccion = document.getElementById("chat-direccion").value.trim();
+            const incidencia = document.getElementById("chat-incidencia").value.trim();
 
             if (!name || !direccion || !incidencia) {
                 addMessage("⚠️ Por favor complete todos los campos.", "bot");
@@ -209,6 +215,7 @@
 
             addMessage("Enviando reporte...", "bot");
 
+            // ENVÍO EmailJS
             emailjs.send("service_6n1vp4m", "template_7yj72fo", {
                 name: name,
                 time: new Date().toLocaleString(),
