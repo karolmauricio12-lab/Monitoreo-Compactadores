@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Chatbot Bellavista</title>
+
 <style>
   body {
     font-family: Arial, sans-serif;
   }
   #chatbox {
     width: 350px;
-    height: 450px;
+    height: 520px;
     border: 1px solid #ccc;
     padding: 12px;
     display: flex;
@@ -27,9 +28,12 @@
     display: flex;
     gap: 6px;
   }
-  input {
-    flex: 1;
+  input, textarea {
+    width: 100%;
     padding: 8px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
   button {
     padding: 8px 12px;
@@ -37,6 +41,9 @@
     color: white;
     border: none;
     cursor: pointer;
+    width: 100%;
+    margin-top: 6px;
+    border-radius: 4px;
   }
 </style>
 
@@ -44,7 +51,7 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
-  emailjs.init("_Iq2cEVId5yGaT-WvZMxE");
+  emailjs.init("_Iq2cEVId5yGaT-WvZMxE"); // TU PUBLIC KEY
 })();
 </script>
 
@@ -53,62 +60,65 @@
 
 <div id="chatbox">
   <h3>Chat Municipalidad Bellavista</h3>
+
   <div id="messages"></div>
 
-  <div id="inputArea">
-    <input id="userInput" type="text" placeholder="Escribe aquí...">
-    <button onclick="sendMessage()">Enviar</button>
-  </div>
+  <label>Nombre del vecino:</label>
+  <input id="nombre" type="text">
+
+  <label>Dirección del incidente:</label>
+  <input id="direccion" type="text">
+
+  <label>Detalle del problema:</label>
+  <textarea id="detalle" rows="2"></textarea>
+
+  <button onclick="enviarReporte()">Enviar reporte</button>
 </div>
 
 <script>
-  const messages = document.getElementById("messages");
+const messages = document.getElementById("messages");
 
-  function addMessage(text, sender = "bot") {
-    const p = document.createElement("p");
-    p.innerHTML = `<strong>${sender === "bot" ? "🤖" : "🧑‍💼"}:</strong> ${text}`;
-    messages.appendChild(p);
-    messages.scrollTop = messages.scrollHeight;
+function addMessage(text, sender = "bot") {
+  const p = document.createElement("p");
+  p.innerHTML = `<strong>${sender === "bot" ? "🤖" : "🧑‍💼"}:</strong> ${text}`;
+  messages.appendChild(p);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+// MENSAJE INICIAL
+addMessage("Estimado vecino, contribuye a mantener una ciudad limpia. Por favor complete sus datos y envíe el reporte.");
+
+function enviarReporte() {
+  const nombre = document.getElementById("nombre").value.trim();
+  const direccion = document.getElementById("direccion").value.trim();
+  const detalle = document.getElementById("detalle").value.trim();
+
+  if (!nombre || !direccion || !detalle) {
+    addMessage("⚠️ Por favor complete todos los campos.", "bot");
+    return;
   }
 
-  // MENSAJE INICIAL
-  addMessage("Estimado vecino, contribuye a mantener una ciudad limpia.<br>Por favor indícame tu dirección y la incidencia (residuos no recogidos).");
+  addMessage("Enviando reporte...", "bot");
 
-  function sendMessage() {
-    const input = document.getElementById("userInput");
-    const text = input.value.trim();
+  const fecha = new Date().toLocaleString();
 
-    if (!text) return;
-
-    addMessage(text, "user");
-    input.value = "";
-
-    procesarMensaje(text);
-  }
-
-  function procesarMensaje(text) {
-    addMessage("Gracias, estoy registrando tu reporte...");
-
-    enviarCorreo(text)
-      .then(() => {
-        addMessage("Tu reporte fue enviado correctamente ✔️");
-      })
-      .catch((err) => {
-        addMessage("Hubo un error al enviar el reporte ❌");
-        console.error(err);
-      });
-  }
-
-  function enviarCorreo(mensaje) {
-    return emailjs.send(
-      "service_6n1vp4m",
-      "template_7yj72fo",
-      {
-        mensaje: mensaje,
-        correo: "kmauriciomaldonado@mdbellavista.gob.pe"
-      }
-    );
-  }
+  emailjs.send(
+    "service_6n1vp4m",
+    "template_7yj72fo",
+    {
+      name: nombre,                        // ✔ COINCIDE CON TU TEMPLATE
+      time: fecha,                         // ✔ COINCIDE CON TU TEMPLATE
+      message: `Dirección: ${direccion}\nIncidencia: ${detalle}`  // ✔ COINCIDE CON TU TEMPLATE
+    }
+  )
+  .then(() => {
+    addMessage("✔️ Tu reporte fue enviado correctamente. ¡Gracias por colaborar!", "bot");
+  })
+  .catch((err) => {
+    console.error(err);
+    addMessage("❌ Hubo un error al enviar el reporte. Intente nuevamente.", "bot");
+  });
+}
 </script>
 
 </body>
