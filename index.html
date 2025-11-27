@@ -118,19 +118,53 @@
             50% { transform: translateX(30px); opacity: 1; }
             100% { transform: translateX(-30px); opacity: 0.3; }
         }
+
+        @keyframes glow {
+            0%   { box-shadow: 0 0 0px 0px rgba(255,255,255,0.0); }
+            50%  { box-shadow: 0 0 20px 5px rgba(255,255,255,0.35); }
+            100% { box-shadow: 0 0 0px 0px rgba(255,255,255,0.0); }
+        }
     </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<header class="bg-blue-900 p-4 text-white font-bold text-center shadow">
-    MONITOREO CIUDADANO DE CAMIONES COMPACTADORES
+<!-- HEADER PRO -->
+<header class="relative shadow-xl py-3 px-4 flex items-center justify-center">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 opacity-95"></div>
+
+    <div class="relative z-10 flex items-center gap-4 select-none">
+
+        <!-- LOGO ANIMADO -->
+        <div class="relative">
+            <img 
+                src="./logo-bellavista.jpeg"
+                onerror="this.src='https://placehold.co/100x100/1e3a8a/ffffff?text=LOGO'"
+                class="h-14 w-14 md:h-16 md:w-16 rounded-full object-cover shadow-xl
+                       ring-2 ring-white/40 animate-[pulse_4s_ease-in-out_infinite]"
+            >
+            <div class="absolute inset-0 rounded-full animate-[glow_3s_infinite]"></div>
+        </div>
+
+        <!-- TEXTO -->
+        <div class="flex flex-col justify-center text-white">
+            
+            <span class="text-xs md:text-sm uppercase tracking-wide text-blue-200 font-semibold">
+                Municipalidad Distrital de Bellavista
+            </span>
+
+            <h1 class="text-lg md:text-2xl font-extrabold leading-tight drop-shadow-lg">
+                Monitoreo Ciudadano de Camiones Compactadores
+            </h1>
+
+            <div class="mt-1 h-1 w-24 bg-gradient-to-r from-blue-300 to-white rounded-full"></div>
+        </div>
+    </div>
 </header>
 
 <!-- CONTENIDO PRINCIPAL -->
 <main class="p-4">
-    <!-- SECCIÓN MAPA (solo de 5:00 a 12:59) -->
+    <!-- SECCIÓN MAPA (5:00 a 12:59) -->
     <div id="map-section" class="hidden">
         <iframe 
             src="https://monitoreo.gpseyes.pe/sharing/f26738032cc992ea790a7a6d80f5b066"
@@ -140,7 +174,7 @@
         </iframe>
     </div>
 
-    <!-- SECCIÓN COCHERA PRO (de 13:00 a 4:59) -->
+    <!-- SECCIÓN COCHERA PRO (13:00 a 4:59) -->
     <div id="cochera-section" class="hidden flex items-center justify-center h-[80vh]">
         
         <div class="relative w-full flex items-center justify-center p-6">
