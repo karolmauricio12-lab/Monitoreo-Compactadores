@@ -204,7 +204,7 @@ function sendReport() {
         "Dirección: " + data.direccion + "\n" +
         "Incidencia: " + data.incidencia;
 
-    // 1. Enviar correo EmailJS
+    // 1. Enviar correo con EmailJS
     emailjs.send("service_6n1vp4m", "template_7yj72fo", {
         name: data.name,
         time: new Date().toLocaleString(),
@@ -217,23 +217,21 @@ function sendReport() {
         botSay("❌ Hubo un problema al enviar el correo.");
     });
 
-    // 2. Guardar en Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbxma05KqBOdQkdCbfa7v4vVOGoVWftHmBF9vKp9pIxfvD1N-zP7RJA840O1binWqbYX/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            nombre: data.name,
-            direccion: data.direccion,
-            incidencia: data.incidencia
+    // 2. Guardar en Google Sheets (GET con parámetros)
+    const url = new URL("https://script.google.com/macros/s/AKfycbylZAn_71ezgTwhnwogutc0QyTXHIF_W9NVJrh3h85ssoPn2aW3895F2n95yy3Hwfqg/exec");
+
+    url.searchParams.set("nombre", data.name);
+    url.searchParams.set("direccion", data.direccion);
+    url.searchParams.set("incidencia", data.incidencia);
+
+    fetch(url)
+        .then(res => res.json())
+        .then(() => {
+            botSay("🗂️ El reporte fue archivado correctamente en la base de datos municipal.");
         })
-    })
-    .then(res => res.json())
-    .then(() => {
-        botSay("🗂️ El reporte fue archivado en la base de datos municipal.");
-    })
-    .catch(() => {
-        botSay("⚠️ El reporte fue enviado, pero no se pudo guardar en la base de datos.");
-    });
+        .catch(() => {
+            botSay("⚠️ El reporte se envió, pero no se pudo guardar en la base de datos.");
+        });
 }
    
 </script>
