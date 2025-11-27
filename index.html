@@ -224,14 +224,6 @@ function sendReport() {
     url.searchParams.set("direccion", data.direccion);
     url.searchParams.set("incidencia", data.incidencia);
 
-    fetch(url)
-        .then(res => res.json())
-        .then(() => {
-            botSay("🗂️ El reporte fue archivado correctamente en la base de datos municipal.");
-        })
-        .catch(() => {
-            botSay("⚠️ El reporte se envió, pero no se pudo guardar en la base de datos.");
-        });
 }
    
 </script>
